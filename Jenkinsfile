@@ -13,7 +13,7 @@ pipeline {
                 echo "Creating virtual environment and installing dependencies..."
                 sh '''
                 python3 -m venv $VENV
-                source $VENV/bin/activate
+                . $VENV/bin/activate
                 pip install --upgrade pip
                 pip install -r requirements.txt
                 '''
