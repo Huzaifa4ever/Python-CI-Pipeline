@@ -40,15 +40,15 @@ pipeline {
                 source $VENV/bin/activate
                 pytest --junitxml=reports/junit.xml --cov=app --cov-report=xml:reports/coverage.xml
                 '''
-            }
+            }       
             post {
                 always {
                     junit 'reports/junit.xml'
-                    cobertura autoUpdateHealth: false, autoUpdateStability: false, coberturaReportFile: 'reports/coverage.xml'
+                    cobertura coberturaReportFile: 'reports/coverage.xml', onlyStable: false, failUnhealthy: false
                 }
             }
         }
-
+        
         // -------------------------
         stage('Build') {
             steps {
