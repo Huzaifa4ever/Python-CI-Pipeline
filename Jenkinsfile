@@ -34,21 +34,20 @@ pipeline {
         // -------------------------
         stage('Test') {
             steps {
-                echo "Running pytest with JUnit and Cobertura reports..."
+                echo "Running pytest with JUnit report..."
                 sh '''
                 mkdir -p reports
                 source $VENV/bin/activate
-                pytest --junitxml=reports/junit.xml --cov=app --cov-report=xml:reports/coverage.xml
+                pytest --junitxml=reports/junit.xml --cov=app
                 '''
-            }       
+            }
             post {
                 always {
                     junit 'reports/junit.xml'
-                    cobertura coberturaReportFile: 'reports/coverage.xml', onlyStable: false, failUnhealthy: false
                 }
             }
         }
-        
+
         // -------------------------
         stage('Build') {
             steps {
