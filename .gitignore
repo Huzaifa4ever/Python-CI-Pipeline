@@ -14,9 +14,11 @@ build/
 venv/
 .env
 
-# Pytest
+# Pytest and coverage reports
 reports/
 *.xml
+*.html
+*.htmlcov/
 
 # IDE / editor
 .vscode/

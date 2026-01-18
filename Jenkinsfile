@@ -13,9 +13,8 @@ pipeline {
                 echo "Creating virtual environment and installing dependencies..."
                 sh '''
                 python3 -m venv $VENV
-                . $VENV/bin/activate
-                pip install --upgrade pip
-                pip install -r requirements.txt
+                $VENV/bin/pip install --upgrade pip
+                $VENV/bin/pip install -r requirements.txt
                 '''
             }
         }
@@ -25,8 +24,7 @@ pipeline {
             steps {
                 echo "Running flake8 lint check..."
                 sh '''
-                source $VENV/bin/activate
-                flake8 app tests
+                $VENV/bin/flake8 app tests
                 '''
             }
         }
@@ -34,16 +32,23 @@ pipeline {
         // -------------------------
         stage('Test') {
             steps {
-                echo "Running pytest with JUnit report..."
+                echo "Running tests with pytest..."
                 sh '''
                 mkdir -p reports
-                source $VENV/bin/activate
-                pytest --junitxml=reports/junit.xml --cov=app
+                $VENV/bin/pytest --junitxml=reports/junit.xml --cov=app --cov-report=html:reports/htmlcov
                 '''
             }
             post {
                 always {
                     junit 'reports/junit.xml'
+
+                    publishHTML(target: [
+                        reportName: 'Coverage Report',
+                        reportDir: 'reports/htmlcov',
+                        reportFiles: 'index.html',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
                 }
             }
         }
